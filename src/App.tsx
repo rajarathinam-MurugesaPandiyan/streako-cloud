@@ -1,4 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
+import { PrivacyPolicy } from './pages/PrivacyPolicy';
+import { TermsAndConditions } from './pages/TermsAndConditions';
 import './App.css';
 
 // Audio tone definitions matching Streako's AlarmTone constants
@@ -50,6 +52,9 @@ interface SimHabit {
 }
 
 export function App() {
+  // Page view routing: 'home' | 'privacy' | 'terms'
+  const [currentView, setCurrentView] = useState<'home' | 'privacy' | 'terms'>('home');
+
   // Theme state: 'system' | 'light' | 'dark'
   const [theme, setTheme] = useState<'system' | 'light' | 'dark'>('system');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -73,7 +78,6 @@ export function App() {
 
   // Celebration Modal state
   const [celebrationOpen, setCelebrationOpen] = useState(false);
-  const [legalModal, setLegalModal] = useState<'privacy' | 'terms' | null>(null);
 
   // Dynamic greeting based on current local hour
   const [timeGreeting, setTimeGreeting] = useState('Good Morning');
@@ -101,7 +105,40 @@ export function App() {
     } catch (e) {
       console.warn('LocalStorage error:', e);
     }
+
+    // Handle URL hash changes for direct deep linking (#privacy, #terms, #top)
+    const handleHashChange = () => {
+      const hash = window.location.hash;
+      if (hash === '#privacy') {
+        setCurrentView('privacy');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else if (hash === '#terms') {
+        setCurrentView('terms');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else if (hash === '' || hash === '#top') {
+        setCurrentView('home');
+      }
+    };
+
+    window.addEventListener('hashchange', handleHashChange);
+    handleHashChange();
+
+    return () => {
+      window.removeEventListener('hashchange', handleHashChange);
+    };
   }, []);
+
+  const navigateTo = (view: 'home' | 'privacy' | 'terms') => {
+    setCurrentView(view);
+    if (view === 'privacy') {
+      window.location.hash = '#privacy';
+    } else if (view === 'terms') {
+      window.location.hash = '#terms';
+    } else {
+      window.location.hash = '#top';
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   // Theme toggle handler complying with modern-web-guidance
   const toggleTheme = () => {
@@ -304,7 +341,19 @@ export function App() {
         )}
       </header>
 
-      {/* HERO SECTION */}
+      {/* DEDICATED LEGAL PAGE VIEWS */}
+      {currentView === 'privacy' && (
+        <PrivacyPolicy onBack={() => navigateTo('home')} />
+      )}
+
+      {currentView === 'terms' && (
+        <TermsAndConditions onBack={() => navigateTo('home')} />
+      )}
+
+      {/* MAIN LANDING VIEW */}
+      {currentView === 'home' && (
+        <main>
+          {/* HERO SECTION */}
       <section className="hero-section">
         <div className="hero-bg-blobs" aria-hidden="true">
           <div className="blob blob-1"></div>
@@ -1111,12 +1160,21 @@ export function App() {
           </div>
         </div>
       </section>
+      </main>
+      )}
 
       {/* FOOTER */}
       <footer className="site-footer">
         <div className="container footer-grid">
           <div className="footer-brand-col">
-            <a href="#top" className="brand-logo footer-logo">
+            <a
+              href="#top"
+              onClick={(e) => {
+                e.preventDefault();
+                navigateTo('home');
+              }}
+              className="brand-logo footer-logo"
+            >
               <img src="/assets/streako.png" alt="Streako Logo" width="32" height="32" />
               <span className="logo-text">Streako</span>
             </a>
@@ -1132,20 +1190,20 @@ export function App() {
           <div className="footer-nav-col">
             <h4 className="footer-col-title">Product</h4>
             <ul className="footer-links">
-              <li><a href="#features">Features</a></li>
-              <li><a href="#interactive-demo">Live Simulator</a></li>
-              <li><a href="#soundscapes">AlarmKit Sounds</a></li>
-              <li><a href="#awards">Streak Awards</a></li>
-              <li><a href="#science">Habit Science</a></li>
+              <li><a href="#features" onClick={() => { if (currentView !== 'home') navigateTo('home'); }}>Features</a></li>
+              <li><a href="#interactive-demo" onClick={() => { if (currentView !== 'home') navigateTo('home'); }}>Live Simulator</a></li>
+              <li><a href="#soundscapes" onClick={() => { if (currentView !== 'home') navigateTo('home'); }}>AlarmKit Sounds</a></li>
+              <li><a href="#awards" onClick={() => { if (currentView !== 'home') navigateTo('home'); }}>Streak Awards</a></li>
+              <li><a href="#science" onClick={() => { if (currentView !== 'home') navigateTo('home'); }}>Habit Science</a></li>
             </ul>
           </div>
 
           <div className="footer-nav-col">
             <h4 className="footer-col-title">Resources</h4>
             <ul className="footer-links">
-              <li><a href="#faq">FAQ & Support</a></li>
-              <li><a href="#download">iOS Download</a></li>
-              <li><a href="#download">Android APK</a></li>
+              <li><a href="#faq" onClick={() => { if (currentView !== 'home') navigateTo('home'); }}>FAQ & Support</a></li>
+              <li><a href="#download" onClick={() => { if (currentView !== 'home') navigateTo('home'); }}>iOS Download</a></li>
+              <li><a href="#download" onClick={() => { if (currentView !== 'home') navigateTo('home'); }}>Android APK</a></li>
               <li><a href="https://github.com/rajarathinam-MurugesaPandiyan/streako" target="_blank" rel="noopener noreferrer">GitHub Repo</a></li>
             </ul>
           </div>
@@ -1153,8 +1211,8 @@ export function App() {
           <div className="footer-nav-col">
             <h4 className="footer-col-title">Legal & Trust</h4>
             <ul className="footer-links">
-              <li><button onClick={() => setLegalModal('privacy')} className="btn-ghost" style={{ padding: 0 }}>Privacy Policy</button></li>
-              <li><button onClick={() => setLegalModal('terms')} className="btn-ghost" style={{ padding: 0 }}>Terms of Service</button></li>
+              <li><button onClick={() => navigateTo('privacy')} className="btn-ghost" style={{ padding: 0 }}>Privacy Policy</button></li>
+              <li><button onClick={() => navigateTo('terms')} className="btn-ghost" style={{ padding: 0 }}>Terms of Service</button></li>
               <li><span className="badge-offline">Local-First Storage</span></li>
               <li><span className="badge-offline">Zero Tracking Ads</span></li>
             </ul>
@@ -1176,42 +1234,6 @@ export function App() {
             </p>
             <button className="btn btn-primary btn-block" onClick={() => setCelebrationOpen(false)}>
               Keep Up The Momentum!
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* LEGAL MODALS (Privacy & Terms) */}
-      {legalModal && (
-        <div className="modal-backdrop" onClick={() => setLegalModal(null)}>
-          <div className="modal-card" style={{ maxWidth: '580px', textAlign: 'left' }} role="dialog" aria-modal="true" onClick={(e) => e.stopPropagation()}>
-            <button className="modal-close-btn" onClick={() => setLegalModal(null)} aria-label="Close modal">
-              &times;
-            </button>
-            <h3 className="modal-title" style={{ marginBottom: '1rem' }}>
-              {legalModal === 'privacy' ? 'Streako Privacy Policy' : 'Streako Terms of Service'}
-            </h3>
-            <div style={{ maxHeight: '350px', overflowY: 'auto', fontSize: '0.9rem', color: 'var(--text-secondary)', lineHeight: '1.6', marginBottom: '1.5rem', paddingRight: '0.5rem' }}>
-              {legalModal === 'privacy' ? (
-                <>
-                  <p><strong>1. Local-First Storage:</strong> Your personal habits, schedules, and completion logs are stored directly on your device using Hive local storage. We do not transmit your habit history to third-party data brokers.</p>
-                  <br />
-                  <p><strong>2. Authentication:</strong> When choosing to sign in with Google, only standard profile identification (UID, email) is used solely to authenticate your account and back up your routines.</p>
-                  <br />
-                  <p><strong>3. Zero Ad Trackers:</strong> Streako contains zero third-party advertisement SDKs or cross-site tracking pixels.</p>
-                </>
-              ) : (
-                <>
-                  <p><strong>1. Acceptance:</strong> By accessing and using the Streako mobile app or website, you agree to these Terms of Service.</p>
-                  <br />
-                  <p><strong>2. Habit Tracking & Health:</strong> Streako is a self-improvement habit tracking utility. It does not provide medical or psychological treatment advice.</p>
-                  <br />
-                  <p><strong>3. License:</strong> You are granted a personal, non-exclusive license to use Streako for your personal routine management.</p>
-                </>
-              )}
-            </div>
-            <button className="btn btn-primary btn-block" onClick={() => setLegalModal(null)}>
-              Close
             </button>
           </div>
         </div>

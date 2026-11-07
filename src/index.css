@@ -310,8 +310,9 @@ h1, h2, h3, h4, h5, h6 {
   width: 100%;
 }
 
+.accent-text,
 .gradient-text {
-  background: linear-gradient(135deg, var(--color-brand-accent) 0%, #20C997 50%, #FF922B 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: var(--color-brand-accent);
+  background: none;
+  -webkit-text-fill-color: initial;
 }

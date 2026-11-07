@@ -37,28 +37,28 @@ const ALARM_TONES: ToneItem[] = [
     name: 'Classic Bell',
     subtitle: 'High-energy urgent dual-tone beeps for non-negotiable morning habits',
     icon: <BellIcon size={24} />,
-    src: '/assets/alarm.wav',
+    src: `${import.meta.env.BASE_URL}assets/alarm.wav`,
   },
   {
     id: 'digital',
     name: 'Digital Siren',
     subtitle: 'Rapid alternating electronic alert designed to break inertia',
     icon: <AlarmClockIcon size={24} />,
-    src: '/assets/digital_alarm.wav',
+    src: `${import.meta.env.BASE_URL}assets/digital_alarm.wav`,
   },
   {
     id: 'chime',
     name: 'Chime Melody',
     subtitle: 'Harmonious bright melodic bell cadence ideal for mindfulness',
     icon: <MusicIcon size={24} />,
-    src: '/assets/chime_alarm.wav',
+    src: `${import.meta.env.BASE_URL}assets/chime_alarm.wav`,
   },
   {
     id: 'radar',
     name: 'Radar Pulse',
     subtitle: 'Insistent sonar-style repeating sweep for workout & hydration check-ins',
     icon: <RadarIcon size={24} />,
-    src: '/assets/radar_alarm.wav',
+    src: `${import.meta.env.BASE_URL}assets/radar_alarm.wav`,
   },
 ];
 
@@ -159,7 +159,7 @@ export function HomePage() {
     if (!heroHabitDone) {
       setHeroHabitDone(true);
       setHeroStreak(8);
-      playAudioFeedback('/assets/chime_alarm.wav');
+      playAudioFeedback(`${import.meta.env.BASE_URL}assets/chime_alarm.wav`);
       setTimeout(() => {
         setCelebrationOpen(true);
       }, 400);
@@ -332,7 +332,7 @@ export function HomePage() {
                 <div className="phone-app-header">
                   <div className="phone-user-greeting">
                     <div className="greeting-avatar">
-                      <img src="/assets/streako.png" alt="User avatar" width="32" height="32" />
+                      <img src={`${import.meta.env.BASE_URL}assets/streako.png`} alt="User avatar" width="32" height="32" />
                     </div>
                     <div className="greeting-text-box">
                       <span className="greeting-time-tag">{timeGreeting}</span>
@@ -898,7 +898,7 @@ export function HomePage() {
                     Reaching 3 consecutive days bridges the gap between effort and habit automaticity. Completing 7 days cements your identity as someone who shows up.
                   </p>
                   <div className="quote-author">
-                    <img src="/assets/streako.png" alt="Streako Icon" width="40" height="40" />
+                    <img src={`${import.meta.env.BASE_URL}assets/streako.png`} alt="Streako Icon" width="40" height="40" />
                     <div>
                       <strong>Streako Behavioral Lab</strong>
                       <span>Built into Streako Core</span>
@@ -1058,7 +1058,7 @@ export function HomePage() {
             <div className="banner-blob" aria-hidden="true"></div>
 
             <div className="download-content">
-              <img src="/assets/streako.png" alt="Streako Icon" className="download-app-icon" width="84" height="84" />
+              <img src={`${import.meta.env.BASE_URL}assets/streako.png`} alt="Streako Icon" className="download-app-icon" width="84" height="84" />
               <h2 className="download-title">Start Building Your Unstoppable Streak Today</h2>
               <p className="download-subtitle">
                 Join thousands of consistent achievers turning small daily actions into lifelong triumphs. Free to download on iOS and Android.

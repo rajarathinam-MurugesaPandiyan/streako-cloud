@@ -141,7 +141,7 @@ export function PrivacyPolicy() {
         </div>
 
         <div className="legal-brand-badge" aria-hidden="true">
-          <img src="/assets/streako.png" alt="" width="24" height="24" />
+          <img src={`${import.meta.env.BASE_URL}assets/streako.png`} alt="" width="24" height="24" />
           <span>Streako Legal</span>
         </div>
       </nav>

@@ -129,7 +129,7 @@ export function Layout() {
             className="brand-logo"
             aria-label="Streako Home"
           >
-            <img src="/assets/streako.png" alt="Streako Logo" className="logo-image" width="38" height="38" />
+            <img src={`${import.meta.env.BASE_URL}assets/streako.png`} alt="Streako Logo" className="logo-image" width="38" height="38" />
             <span className="logo-text">Streako</span>
             <span className="logo-badge">v1.0</span>
           </Link>
@@ -381,7 +381,7 @@ export function Layout() {
               onClick={() => handleNavClick('#top')}
               className="brand-logo footer-logo"
             >
-              <img src="/assets/streako.png" alt="Streako Logo" width="32" height="32" />
+              <img src={`${import.meta.env.BASE_URL}assets/streako.png`} alt="Streako Logo" width="32" height="32" />
               <span className="logo-text">Streako</span>
             </Link>
             <p className="footer-tagline">

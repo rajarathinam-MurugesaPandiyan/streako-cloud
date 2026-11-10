@@ -1,0 +1,531 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light dark" />
+
+    <title>Delete Account &amp; Data — Streako Habit Tracker | Ethics of Coding</title>
+    <meta
+      name="description"
+      content="Official Account and Data Deletion instructions for Streako (com.ethicsofcoding.streako) by Ethics of Coding. Permanent deletion steps and zero data retention policy."
+    />
+
+    <!-- Favicon & Touch Icon -->
+    <link rel="icon" type="image/png" href="/assets/streako.png" />
+    <link rel="apple-touch-icon" href="/assets/streako.png" />
+
+    <!-- Google Fonts: Lexend -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      :root {
+        --bg-page: #f8faf9;
+        --bg-surface: #ffffff;
+        --bg-card: #ffffff;
+        --border-color: #e5e7eb;
+        --text-primary: #111827;
+        --text-secondary: #4b5563;
+        --text-muted: #6b7280;
+        --brand-primary: #059669;
+        --brand-accent: #10b981;
+        --danger-color: #ef4444;
+        --danger-bg: rgba(239, 68, 68, 0.08);
+      }
+
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg-page: #0b1411;
+          --bg-surface: #13221d;
+          --bg-card: #182a24;
+          --border-color: #243d34;
+          --text-primary: #f3f4f6;
+          --text-secondary: #9ca3af;
+          --text-muted: #9ca3af;
+          --brand-primary: #10b981;
+          --brand-accent: #34d399;
+          --danger-color: #f87171;
+          --danger-bg: rgba(239, 68, 68, 0.15);
+        }
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: 'Lexend', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        background-color: var(--bg-page);
+        color: var(--text-primary);
+        line-height: 1.6;
+        padding: 1.5rem 1rem 3rem 1rem;
+      }
+
+      .container {
+        max-width: 860px;
+        margin: 0 auto;
+      }
+
+      /* Navigation header */
+      .nav-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 2rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid var(--border-color);
+      }
+
+      .nav-brand {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        text-decoration: none;
+        color: var(--text-primary);
+        font-weight: 700;
+        font-size: 1.15rem;
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 0.75rem;
+        align-items: center;
+      }
+
+      .nav-pill {
+        display: inline-block;
+        padding: 0.4rem 0.85rem;
+        border-radius: 9999px;
+        font-size: 0.85rem;
+        text-decoration: none;
+        color: var(--text-secondary);
+        background: var(--bg-surface);
+        border: 1px solid var(--border-color);
+        transition: all 0.2s ease;
+      }
+
+      .nav-pill:hover,
+      .nav-pill.active {
+        color: var(--brand-primary);
+        border-color: var(--brand-primary);
+        font-weight: 600;
+      }
+
+      /* Hero Banner */
+      .hero-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border-color);
+        border-left: 6px solid var(--danger-color);
+        border-radius: 18px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+      }
+
+      .pill-row {
+        display: flex;
+        gap: 0.6rem;
+        flex-wrap: wrap;
+        margin-bottom: 1rem;
+      }
+
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        font-size: 0.78rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        padding: 0.25rem 0.65rem;
+        border-radius: 6px;
+        background: var(--danger-bg);
+        color: var(--danger-color);
+      }
+
+      .badge.success {
+        background: rgba(16, 185, 129, 0.12);
+        color: var(--brand-primary);
+      }
+
+      .hero-title {
+        font-size: clamp(1.6rem, 3.5vw, 2.25rem);
+        font-weight: 800;
+        line-height: 1.25;
+        margin-bottom: 0.75rem;
+      }
+
+      .hero-subtitle {
+        color: var(--text-secondary);
+        font-size: 1.05rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .meta-box {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 0.85rem;
+        padding: 1.25rem;
+        background: var(--bg-page);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        font-size: 0.88rem;
+      }
+
+      .meta-item strong {
+        color: var(--text-primary);
+      }
+
+      code {
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+        background: var(--bg-surface);
+        padding: 0.15rem 0.4rem;
+        border-radius: 4px;
+        font-size: 0.85em;
+        border: 1px solid var(--border-color);
+        color: var(--brand-primary);
+      }
+
+      /* Policy Section Cards */
+      .section-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border-color);
+        border-radius: 16px;
+        padding: 2rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .section-title {
+        font-size: 1.35rem;
+        font-weight: 700;
+        margin-bottom: 0.75rem;
+        color: var(--text-primary);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .section-text {
+        color: var(--text-secondary);
+        margin-bottom: 1.25rem;
+      }
+
+      /* Step Cards */
+      .steps-list {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        margin: 1.25rem 0;
+      }
+
+      .step-item {
+        display: flex;
+        gap: 1rem;
+        align-items: flex-start;
+        padding: 1rem;
+        background: var(--bg-page);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+      }
+
+      .step-number {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: var(--danger-color);
+        color: #ffffff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 0.85rem;
+        flex-shrink: 0;
+      }
+
+      .step-content strong {
+        display: block;
+        color: var(--text-primary);
+        margin-bottom: 0.25rem;
+      }
+
+      .step-content p {
+        color: var(--text-secondary);
+        font-size: 0.92rem;
+      }
+
+      /* Action Button */
+      .btn-primary {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: var(--danger-color);
+        color: #ffffff;
+        font-weight: 600;
+        text-decoration: none;
+        padding: 0.75rem 1.4rem;
+        border-radius: 10px;
+        font-size: 0.95rem;
+        margin-top: 0.5rem;
+        transition: opacity 0.2s ease, transform 0.1s ease;
+      }
+
+      .btn-primary:hover {
+        opacity: 0.9;
+        transform: translateY(-1px);
+      }
+
+      /* Data Breakdown Table / Cards */
+      .data-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        margin-top: 1rem;
+      }
+
+      .data-box {
+        padding: 1.25rem;
+        border-radius: 12px;
+        border: 1px solid var(--border-color);
+        background: var(--bg-page);
+      }
+
+      .data-box.deleted {
+        border-left: 4px solid var(--danger-color);
+      }
+
+      .data-box.kept {
+        border-left: 4px solid #10b981;
+      }
+
+      .data-box.retention {
+        border-left: 4px solid #3b82f6;
+      }
+
+      .data-box h4 {
+        font-size: 1rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .data-box ul {
+        padding-left: 1.25rem;
+        color: var(--text-secondary);
+        font-size: 0.92rem;
+        line-height: 1.7;
+      }
+
+      .footer {
+        text-align: center;
+        margin-top: 3rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid var(--border-color);
+        color: var(--text-muted);
+        font-size: 0.85rem;
+      }
+
+      .footer a {
+        color: var(--brand-primary);
+        text-decoration: none;
+      }
+
+      .footer a:hover {
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <!-- Navigation Bar -->
+      <nav class="nav-bar" aria-label="Breadcrumb navigation">
+        <a href="/" class="nav-brand">
+          <img src="/assets/streako.png" alt="Streako Icon" width="28" height="28" style="border-radius: 6px;" />
+          <span>Streako</span>
+        </a>
+        <div class="nav-links">
+          <a href="/privacy" class="nav-pill">Privacy Policy</a>
+          <a href="/terms" class="nav-pill">Terms of Service</a>
+          <a href="/delete-account" class="nav-pill active">Delete Account</a>
+        </div>
+      </nav>
+
+      <!-- Hero Header -->
+      <header class="hero-card">
+        <div class="pill-row">
+          <span class="badge">Google Play Compliant</span>
+          <span class="badge success">Zero Data Retention</span>
+        </div>
+        <h1 class="hero-title">Delete Streako Account &amp; Data</h1>
+        <p class="hero-subtitle">
+          Official account and data deletion instructions for <strong>Streako</strong>, developed and published by <strong>Ethics of Coding</strong>.
+        </p>
+
+        <div class="meta-box">
+          <div class="meta-item">
+            <strong>Application:</strong> Streako
+          </div>
+          <div class="meta-item">
+            <strong>Developer:</strong> Ethics of Coding
+          </div>
+          <div class="meta-item">
+            <strong>Package ID:</strong> <code>com.ethicsofcoding.streako</code>
+          </div>
+          <div class="meta-item">
+            <strong>Contact Email:</strong> <a href="mailto:streakocloud@gmail.com" style="color: inherit;">streakocloud@gmail.com</a>
+          </div>
+          <div class="meta-item">
+            <strong>Data Retention Period:</strong> 0 Days (Immediate Purge)
+          </div>
+          <div class="meta-item">
+            <strong>Data Kept:</strong> None (Zero shadow records)
+          </div>
+        </div>
+      </header>
+
+      <!-- Section 1: In-App Immediate Deletion Steps -->
+      <section class="section-card" id="in-app">
+        <h2 class="section-title">1. Steps to Delete Your Account Inside the App (Recommended)</h2>
+        <p class="section-text">
+          If you currently have Streako installed on your mobile phone, you can immediately and permanently delete your entire account and all associated habit tracking data directly from the app:
+        </p>
+
+        <ol class="steps-list">
+          <li class="step-item">
+            <span class="step-number">1</span>
+            <div class="step-content">
+              <strong>Open Streako App</strong>
+              <p>Launch the Streako mobile app on your Android or iOS device.</p>
+            </div>
+          </li>
+          <li class="step-item">
+            <span class="step-number">2</span>
+            <div class="step-content">
+              <strong>Open Settings</strong>
+              <p>Tap the <strong>Settings</strong> icon (gear icon) located in the upper navigation bar.</p>
+            </div>
+          </li>
+          <li class="step-item">
+            <span class="step-number">3</span>
+            <div class="step-content">
+              <strong>Locate Danger Zone</strong>
+              <p>Scroll down to the bottom of the Settings page to the <strong>Danger Zone</strong> section.</p>
+            </div>
+          </li>
+          <li class="step-item">
+            <span class="step-number">4</span>
+            <div class="step-content">
+              <strong>Tap "Delete Account &amp; Data"</strong>
+              <p>Tap the red <strong>Delete Account &amp; Data</strong> button.</p>
+            </div>
+          </li>
+          <li class="step-item">
+            <span class="step-number">5</span>
+            <div class="step-content">
+              <strong>Confirm Permanent Erasure</strong>
+              <p>Confirm the deletion prompt. Your local database (Hive) is wiped immediately, scheduled notifications and alarms are cancelled, and your Google Single Sign-On (SSO) session is permanently terminated.</p>
+            </div>
+          </li>
+        </ol>
+      </section>
+
+      <!-- Section 2: Web / Email Deletion Request (Without having the app installed) -->
+      <section class="section-card" id="manual-request">
+        <h2 class="section-title">2. Steps to Request Account Deletion Without the App (Web / Email Request)</h2>
+        <p class="section-text">
+          If you have uninstalled the Streako app, lost access to your device, or signed in using Google Authentication and wish to request complete deletion of your account and credentials, follow these steps:
+        </p>
+
+        <ol class="steps-list">
+          <li class="step-item">
+            <span class="step-number">1</span>
+            <div class="step-content">
+              <strong>Send Email from Registered Address</strong>
+              <p>Send an email from the Google email address associated with your Streako account to <code>streakocloud@gmail.com</code>.</p>
+            </div>
+          </li>
+          <li class="step-item">
+            <span class="step-number">2</span>
+            <div class="step-content">
+              <strong>Use Required Subject Line</strong>
+              <p>Set subject to: <code>Streako Account &amp; Data Deletion Request (com.ethicsofcoding.streako)</code>.</p>
+            </div>
+          </li>
+          <li class="step-item">
+            <span class="step-number">3</span>
+            <div class="step-content">
+              <strong>Provide Identification Details</strong>
+              <p>Confirm your registered Google email address and state that you request permanent deletion of your profile and all associated data.</p>
+            </div>
+          </li>
+          <li class="step-item">
+            <span class="step-number">4</span>
+            <div class="step-content">
+              <strong>Verification &amp; Confirmation</strong>
+              <p>Our security team will authenticate your request, delete your Firebase authentication profile, and send an email confirmation within 48 to 72 hours.</p>
+            </div>
+          </li>
+        </ol>
+
+        <a
+          href="mailto:streakocloud@gmail.com?subject=Streako%20Account%20and%20Data%20Deletion%20Request&body=Hello%20Ethics%20of%20Coding%20Support%2C%0A%0APlease%20permanently%20delete%20my%20account%20and%20all%20associated%20data%20for%20Streako%20(com.ethicsofcoding.streako).%0A%0AMy%20registered%20Google%20email%3A%20%0A%0AThank%20you."
+          class="btn-primary"
+        >
+          <span>Launch Pre-Filled Deletion Email (streakocloud@gmail.com)</span>
+        </a>
+      </section>
+
+      <!-- Section 3: Data Deleted vs Kept & Retention Period -->
+      <section class="section-card" id="data-breakdown">
+        <h2 class="section-title">3. Types of Data Deleted vs. Kept &amp; Retention Period</h2>
+        <p class="section-text">
+          Streako adheres strictly to the Google Play Store Data Safety and Account Deletion policy:
+        </p>
+
+        <div class="data-grid">
+          <div class="data-box deleted">
+            <h4 style="color: var(--danger-color);">Types of Data Permanently Deleted:</h4>
+            <ul>
+              <li><strong>User Identity &amp; Profile:</strong> Google Single Sign-On UID, email address, name, and profile photo URL stored in Firebase Authentication.</li>
+              <li><strong>Habit Definitions &amp; Targets:</strong> All custom habit titles, descriptions, schedules, frequency rules, and reminder intervals.</li>
+              <li><strong>Streak &amp; Completion Records:</strong> Historical completion timestamps, check-in logs, current streaks, best streak records, and unlocked awards.</li>
+              <li><strong>System Alarms &amp; Notifications:</strong> All scheduled AlarmKit alarms and notification channels are immediately deregistered and cancelled.</li>
+              <li><strong>Local Device Cache:</strong> Local preferences, audio soundscape selections, and theme configuration.</li>
+            </ul>
+          </div>
+
+          <div class="data-box kept">
+            <h4 style="color: #10b981;">Types of Data Kept:</h4>
+            <p style="color: var(--text-secondary); font-size: 0.95rem;">
+              <strong>NONE.</strong> Streako retains zero personal data, tracking records, or identity tokens after account deletion is confirmed.
+            </p>
+          </div>
+
+          <div class="data-box retention">
+            <h4 style="color: #3b82f6;">Additional Retention Period:</h4>
+            <p style="color: var(--text-secondary); font-size: 0.95rem;">
+              <strong>Zero Days.</strong> Deletion performed within the app takes effect immediately on your hardware and credentials. Manual deletion requests sent by email are fully processed within 48 to 72 business hours. There are no secondary archive silos, marketing databases, or delayed retention queues.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Footer -->
+      <footer class="footer">
+        <p>&copy; 2026 Streako. Developed by Ethics of Coding. All rights reserved.</p>
+        <p style="margin-top: 0.5rem;">
+          <a href="/">Home</a> &bull;
+          <a href="/privacy">Privacy Policy</a> &bull;
+          <a href="/terms">Terms of Service</a> &bull;
+          <a href="/delete-account">Delete Account</a> &bull;
+          <a href="mailto:streakocloud@gmail.com">Security Contact</a>
+        </p>
+      </footer>
+    </div>
+  </body>
+</html>

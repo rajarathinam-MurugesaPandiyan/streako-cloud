@@ -41,9 +41,9 @@ const SECTIONS: Section[] = [
   {
     id: 'data-deletion',
     title: '5. Complete User Data Deletion',
-    summary: '1-tap nuclear wipe in Settings erases all traces permanently.',
+    summary: '1-tap automated wipe in Settings erases all traces permanently.',
     content:
-      'You maintain absolute sovereignty over your data. You may delete individual habits at any time, or use the "Delete Account & Data" action located inside the Settings menu to permanently erase all local database files, cancel all scheduled notifications, and purge your cloud identity profile.',
+      'You maintain absolute sovereignty over your data. Because Streako operates on a local-first storage model and uses only Google Single Sign-On (SSO) login without storing passwords, clicking "Delete Account" in the mobile app Settings automatically deletes your account details, permanently erases all local Hive database files, unregisters all scheduled alarm notifications, and purges your SSO profile. Read our dedicated Delete Account Guide for step-by-step instructions.',
   },
   {
     id: 'security',
@@ -136,6 +136,15 @@ export function PrivacyPolicy() {
               aria-selected="false"
             >
               Terms of Service
+            </NavLink>
+            <NavLink
+              to="/delete-account"
+              viewTransition
+              className={({ isActive }) => `legal-tab-pill ${isActive ? 'active' : ''}`}
+              role="tab"
+              aria-selected="false"
+            >
+              Delete Account
             </NavLink>
           </div>
         </div>
@@ -289,8 +298,12 @@ export function PrivacyPolicy() {
                 </>
               ) : sec.id === 'data-deletion' ? (
                 <>
-                  You maintain absolute sovereignty over your data. You may delete individual habits at any time, or use the{' '}
-                  <strong>"Delete Account &amp; Data"</strong> action located inside the Settings menu to permanently erase all local database files, cancel all scheduled notifications, and purge your cloud identity profile.
+                  You maintain absolute sovereignty over your data. Because Streako operates on a local-first storage model and uses only Google Single Sign-On (SSO) login, clicking the{' '}
+                  <strong>"Delete Account"</strong> action inside mobile Settings automatically deletes your account details, wipes all local sandboxed Hive database files, unregisters scheduled alarms, and revokes your SSO profile immediately. For full instructions, visit our dedicated{' '}
+                  <Link to="/delete-account" viewTransition className="legal-link">
+                    Delete Account &amp; Data Guide
+                  </Link>
+                  .
                 </>
               ) : (
                 sec.content
@@ -310,6 +323,9 @@ export function PrivacyPolicy() {
           <div className="legal-footer-actions">
             <Link to="/" viewTransition className="btn btn-secondary btn-sm">
               Return to Streako
+            </Link>
+            <Link to="/delete-account" viewTransition className="btn btn-secondary btn-sm">
+              Delete Account Guide
             </Link>
             <Link to="/terms" viewTransition className="btn btn-primary btn-sm">
               View Terms &amp; Conditions →

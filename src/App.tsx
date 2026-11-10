@@ -3,6 +3,7 @@ import { Layout } from './components/Layout';
 import { HomePage } from './pages/HomePage';
 import { PrivacyPolicy } from './pages/PrivacyPolicy';
 import { TermsAndConditions } from './pages/TermsAndConditions';
+import { DeleteAccount } from './pages/DeleteAccount';
 import { NotFound } from './pages/NotFound';
 import './App.css';
 
@@ -30,6 +31,18 @@ const router = createBrowserRouter([
       {
         path: 'terms-and-conditions',
         element: <Navigate to="/terms" replace />,
+      },
+      {
+        path: 'delete-account',
+        element: <DeleteAccount />,
+      },
+      {
+        path: 'delete-data',
+        element: <Navigate to="/delete-account" replace />,
+      },
+      {
+        path: 'account-deletion',
+        element: <Navigate to="/delete-account" replace />,
       },
       {
         path: '*',

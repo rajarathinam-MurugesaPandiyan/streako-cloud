@@ -3,10 +3,10 @@ import babel from '@rolldown/plugin-babel'
 import { defineConfig } from 'vite'
 
 // https://vite.dev/config/
-export default defineConfig({
-  base: process.env.BASE_URL || '/',
+export default defineConfig(({ command }) => ({
+  base: process.env.BASE_URL || (command === 'serve' ? '/' : '/streako-cloud/'),
   plugins: [
     react(),
     babel({ presets: [reactCompilerPreset()] })
   ],
-})
+}))

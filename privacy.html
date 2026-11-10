@@ -1,0 +1,429 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light dark" />
+
+    <title>Privacy Policy — Streako Habit Tracker | Ethics of Coding</title>
+    <meta
+      name="description"
+      content="Official Privacy Policy for Streako (com.ethicsofcoding.streako) by Ethics of Coding. Transparent privacy practices, local-first storage, and zero ad tracking."
+    />
+
+    <!-- Favicon & Touch Icon -->
+    <link rel="icon" type="image/png" href="/assets/streako.png" />
+    <link rel="apple-touch-icon" href="/assets/streako.png" />
+
+    <!-- Google Fonts: Lexend -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      :root {
+        --bg-page: #f8faf9;
+        --bg-surface: #ffffff;
+        --bg-card: #ffffff;
+        --border-color: #e5e7eb;
+        --text-primary: #111827;
+        --text-secondary: #4b5563;
+        --text-muted: #6b7280;
+        --brand-primary: #059669;
+        --brand-accent: #10b981;
+        --teal-accent: #20c997;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg-page: #0b1411;
+          --bg-surface: #13221d;
+          --bg-card: #182a24;
+          --border-color: #243d34;
+          --text-primary: #f3f4f6;
+          --text-secondary: #9ca3af;
+          --text-muted: #9ca3af;
+          --brand-primary: #10b981;
+          --brand-accent: #34d399;
+          --teal-accent: #20c997;
+        }
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: 'Lexend', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        background-color: var(--bg-page);
+        color: var(--text-primary);
+        line-height: 1.6;
+        padding: 1.5rem 1rem 3rem 1rem;
+      }
+
+      .container {
+        max-width: 860px;
+        margin: 0 auto;
+      }
+
+      /* Navigation header */
+      .nav-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 2rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid var(--border-color);
+      }
+
+      .nav-brand {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        text-decoration: none;
+        color: var(--text-primary);
+        font-weight: 700;
+        font-size: 1.15rem;
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 0.75rem;
+        align-items: center;
+      }
+
+      .nav-pill {
+        display: inline-block;
+        padding: 0.4rem 0.85rem;
+        border-radius: 9999px;
+        font-size: 0.85rem;
+        text-decoration: none;
+        color: var(--text-secondary);
+        background: var(--bg-surface);
+        border: 1px solid var(--border-color);
+        transition: all 0.2s ease;
+      }
+
+      .nav-pill:hover,
+      .nav-pill.active {
+        color: var(--brand-primary);
+        border-color: var(--brand-primary);
+        font-weight: 600;
+      }
+
+      /* Hero Banner */
+      .hero-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border-color);
+        border-left: 6px solid var(--teal-accent);
+        border-radius: 18px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+      }
+
+      .pill-row {
+        display: flex;
+        gap: 0.6rem;
+        flex-wrap: wrap;
+        margin-bottom: 1rem;
+      }
+
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        font-size: 0.78rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        padding: 0.25rem 0.65rem;
+        border-radius: 6px;
+        background: rgba(32, 201, 151, 0.12);
+        color: var(--brand-primary);
+      }
+
+      .hero-title {
+        font-size: clamp(1.6rem, 3.5vw, 2.25rem);
+        font-weight: 800;
+        line-height: 1.25;
+        margin-bottom: 0.75rem;
+      }
+
+      .hero-subtitle {
+        color: var(--text-secondary);
+        font-size: 1.05rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .meta-box {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 0.85rem;
+        padding: 1.25rem;
+        background: var(--bg-page);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        font-size: 0.88rem;
+      }
+
+      .meta-item strong {
+        color: var(--text-primary);
+      }
+
+      code {
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+        background: var(--bg-surface);
+        padding: 0.15rem 0.4rem;
+        border-radius: 4px;
+        font-size: 0.85em;
+        border: 1px solid var(--border-color);
+        color: var(--brand-primary);
+      }
+
+      /* Guarantees grid */
+      .guarantees-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 1rem;
+        margin-bottom: 2rem;
+      }
+
+      .guarantee-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border-color);
+        border-radius: 14px;
+        padding: 1.25rem;
+      }
+
+      .guarantee-card h3 {
+        font-size: 1.05rem;
+        margin-bottom: 0.4rem;
+        color: var(--text-primary);
+      }
+
+      .guarantee-card p {
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+      }
+
+      /* Policy Section Cards */
+      .section-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border-color);
+        border-radius: 16px;
+        padding: 2rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .section-title {
+        font-size: 1.3rem;
+        font-weight: 700;
+        margin-bottom: 0.4rem;
+        color: var(--text-primary);
+      }
+
+      .section-summary {
+        display: block;
+        color: var(--brand-primary);
+        font-size: 0.88rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+      }
+
+      .section-text {
+        color: var(--text-secondary);
+        font-size: 0.95rem;
+        line-height: 1.7;
+      }
+
+      .section-text a {
+        color: var(--brand-primary);
+        text-decoration: underline;
+        text-underline-offset: 3px;
+      }
+
+      .footer {
+        text-align: center;
+        margin-top: 3rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid var(--border-color);
+        color: var(--text-muted);
+        font-size: 0.85rem;
+      }
+
+      .footer a {
+        color: var(--brand-primary);
+        text-decoration: none;
+      }
+
+      .footer a:hover {
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <!-- Navigation Bar -->
+      <nav class="nav-bar" aria-label="Breadcrumb navigation">
+        <a href="/" class="nav-brand">
+          <img src="/assets/streako.png" alt="Streako Icon" width="28" height="28" style="border-radius: 6px;" />
+          <span>Streako</span>
+        </a>
+        <div class="nav-links">
+          <a href="/privacy" class="nav-pill active">Privacy Policy</a>
+          <a href="/terms" class="nav-pill">Terms of Service</a>
+          <a href="/delete-account" class="nav-pill">Delete Account</a>
+        </div>
+      </nav>
+
+      <!-- Hero Header -->
+      <header class="hero-card">
+        <div class="pill-row">
+          <span class="badge">Official Policy</span>
+          <span class="badge">Local-First Storage</span>
+          <span class="badge">Zero Ad Trackers</span>
+        </div>
+        <h1 class="hero-title">Streako Privacy Policy</h1>
+        <p class="hero-subtitle">
+          Your privacy is our core foundation. We believe habit trackers must never compromise personal autonomy or trade your behavioral routines with advertisers.
+        </p>
+
+        <div class="meta-box">
+          <div class="meta-item">
+            <strong>Application:</strong> Streako
+          </div>
+          <div class="meta-item">
+            <strong>Developer:</strong> Ethics of Coding
+          </div>
+          <div class="meta-item">
+            <strong>Package ID:</strong> <code>com.ethicsofcoding.streako</code>
+          </div>
+          <div class="meta-item">
+            <strong>Contact Email:</strong> <a href="mailto:streakocloud@gmail.com" style="color: inherit;">streakocloud@gmail.com</a>
+          </div>
+          <div class="meta-item">
+            <strong>Effective Date:</strong> October 2026
+          </div>
+          <div class="meta-item">
+            <strong>Storage Architecture:</strong> Sandboxed Local Hive
+          </div>
+        </div>
+      </header>
+
+      <!-- Guarantees Grid -->
+      <div class="guarantees-grid">
+        <div class="guarantee-card">
+          <h3>Local-First Storage</h3>
+          <p>Habits, notes, and records remain sandboxed on your device storage without mandatory cloud exposure.</p>
+        </div>
+        <div class="guarantee-card">
+          <h3>Zero Tracking Ads</h3>
+          <p>We do not monetize with advertising networks, third-party analytics trackers, or user profiling.</p>
+        </div>
+        <div class="guarantee-card">
+          <h3>1-Tap Complete Wipe</h3>
+          <p>Delete Account &amp; Data removes local database files, purges credentials, and cancels scheduled notifications.</p>
+        </div>
+      </div>
+
+      <!-- Section 1 -->
+      <section class="section-card" id="info-collected">
+        <h2 class="section-title">1. Information We Collect</h2>
+        <span class="section-summary">Minimal identity profile and your routine preferences.</span>
+        <p class="section-text">
+          This Privacy Policy applies to the Streako mobile application (Android package: <code>com.ethicsofcoding.streako</code>) developed by Ethics of Coding. When you choose to sign in using Google Authentication, we receive basic profile details including your name, email address, and profile photo provided by Google via Firebase Authentication. We also record the habit titles, target frequencies, reminder intervals, occurrence timestamps, and streak calculations you configure within the application.
+        </p>
+      </section>
+
+      <!-- Section 2 -->
+      <section class="section-card" id="local-first">
+        <h2 class="section-title">2. Local-First Storage Architecture</h2>
+        <span class="section-summary">Hive sandbox storage strictly on your local hardware.</span>
+        <p class="section-text">
+          Streako prioritizes user privacy through a local-first design. Your habit data, tracking entries, and customized reminder times are stored primarily on your device in local sandboxed storage (Hive). We do not sell, rent, or monetize your personal tracking records with third-party advertising networks or data brokers.
+        </p>
+      </section>
+
+      <!-- Section 3 -->
+      <section class="section-card" id="notifications">
+        <h2 class="section-title">3. Notification &amp; Alarm Permissions</h2>
+        <span class="section-summary">Exact alarm channels strictly for scheduled rituals.</span>
+        <p class="section-text">
+          We request operating system permissions to post notifications and schedule exact alarms (iOS AlarmKit and Android Exact Alarm channels). These permissions are utilized strictly to trigger scheduled reminder alarms and notifications for your configured habits, cutting through system silencers when enabled by you.
+        </p>
+      </section>
+
+      <!-- Section 4 -->
+      <section class="section-card" id="third-party">
+        <h2 class="section-title">4. Third-Party Services</h2>
+        <span class="section-summary">Google Firebase Authentication for safe identity sync.</span>
+        <p class="section-text">
+          We utilize Google Sign-In and Firebase Authentication to provide secure cloud identity and seamless device switching. These third-party services process authentication tokens according to Google's rigorous Privacy Policy and industry security benchmarks.
+        </p>
+      </section>
+
+      <!-- Section 5 -->
+      <section class="section-card" id="data-deletion">
+        <h2 class="section-title">5. Complete User Data Deletion</h2>
+        <span class="section-summary">1-tap automated wipe in Settings erases all traces permanently.</span>
+        <p class="section-text">
+          You maintain absolute sovereignty over your data. Because Streako operates on a local-first storage model and uses only Google Single Sign-On (SSO) login without storing passwords, clicking "Delete Account" in the mobile app Settings automatically deletes your account details, permanently erases all local Hive database files, unregisters all scheduled alarm notifications, and purges your SSO profile. Read our dedicated <a href="/delete-account">Delete Account Guide</a> for step-by-step instructions.
+        </p>
+      </section>
+
+      <!-- Section 6 -->
+      <section class="section-card" id="security">
+        <h2 class="section-title">6. Data Security</h2>
+        <span class="section-summary">TLS 1.3 encryption and device sandbox isolation.</span>
+        <p class="section-text">
+          We employ modern transport layer security (TLS 1.3 / HTTPS) for all network communication and sandbox-level isolation on your device to safeguard your routines against unauthorized access, corruption, or disclosure.
+        </p>
+      </section>
+
+      <!-- Section 7 -->
+      <section class="section-card" id="children">
+        <h2 class="section-title">7. Children's Privacy</h2>
+        <span class="section-summary">Streako is built for general audiences aged 13 and older.</span>
+        <p class="section-text">
+          Streako is not directed toward children under 13 years of age. We do not knowingly collect personal identifiable information from children under 13. If you become aware that a child has provided us with personal information, please notify us immediately for swift removal.
+        </p>
+      </section>
+
+      <!-- Section 8 -->
+      <section class="section-card" id="changes">
+        <h2 class="section-title">8. Changes to This Privacy Policy</h2>
+        <span class="section-summary">Transparent revisions with updated timestamp.</span>
+        <p class="section-text">
+          We may periodically revise our Privacy Policy to reflect evolving features or legal standards. Revisions will be posted here with an updated "Last updated" date. Continued use of Streako denotes consent to the updated terms.
+        </p>
+      </section>
+
+      <!-- Section 9 -->
+      <section class="section-card" id="contact">
+        <h2 class="section-title">9. Contact Us</h2>
+        <span class="section-summary">Direct human support for questions or data requests.</span>
+        <p class="section-text">
+          If you have questions, feedback, or data requests regarding our Privacy Policy or privacy rights, please contact our team directly at <a href="mailto:streakocloud@gmail.com">streakocloud@gmail.com</a>. We respond to all verified inquiries promptly.
+        </p>
+      </section>
+
+      <!-- Footer -->
+      <footer class="footer">
+        <p>&copy; 2026 Streako. Developed by Ethics of Coding. All rights reserved.</p>
+        <p style="margin-top: 0.5rem;">
+          <a href="/">Home</a> &bull;
+          <a href="/privacy">Privacy Policy</a> &bull;
+          <a href="/terms">Terms of Service</a> &bull;
+          <a href="/delete-account">Delete Account</a> &bull;
+          <a href="mailto:streakocloud@gmail.com">Security Contact</a>
+        </p>
+      </footer>
+    </div>
+  </body>
+</html>

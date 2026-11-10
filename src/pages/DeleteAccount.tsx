@@ -6,11 +6,8 @@ import {
   SmartphoneIcon,
   KeyIcon,
   CheckCircleIcon,
-  AlertTriangleIcon,
   MailIcon,
   ExternalLinkIcon,
-  LockIcon,
-  BanIcon,
 } from '../components/Icons';
 
 interface Section {

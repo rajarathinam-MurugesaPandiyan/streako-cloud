@@ -182,22 +182,30 @@ export function DeleteAccount() {
 
             <div className="legal-meta-row">
               <span className="legal-meta-item">
-                <strong>Package:</strong> <code>com.ethicsofcoding.streako</code>
+                <strong>Application:</strong> Streako
               </span>
               <span className="legal-meta-dot">•</span>
               <span className="legal-meta-item">
-                <strong>Auth:</strong> Google SSO Only
+                <strong>Developer:</strong> Ethics of Coding
               </span>
               <span className="legal-meta-dot">•</span>
               <span className="legal-meta-item">
-                <strong>Storage:</strong> Local Sandboxed Hive
+                <strong>Package ID:</strong> <code>com.ethicsofcoding.streako</code>
               </span>
               <span className="legal-meta-dot">•</span>
               <span className="legal-meta-item">
-                <strong>Support:</strong>{' '}
+                <strong>Contact Email:</strong>{' '}
                 <a href="mailto:streakocloud@gmail.com" className="legal-meta-link">
                   streakocloud@gmail.com
                 </a>
+              </span>
+              <span className="legal-meta-dot">•</span>
+              <span className="legal-meta-item">
+                <strong>Data Retention Period:</strong> 0 Days (Immediate Purge)
+              </span>
+              <span className="legal-meta-dot">•</span>
+              <span className="legal-meta-item">
+                <strong>Data Kept:</strong> None
               </span>
             </div>
           </div>

@@ -37,6 +37,10 @@ export function Layout() {
       navigate('/terms', { replace: true, viewTransition: true });
       return;
     }
+    if (hash === '#delete-account' || hash === '#delete') {
+      navigate('/delete-account', { replace: true, viewTransition: true });
+      return;
+    }
 
     // Scroll to section when hash is present
     if (hash && hash !== '#top') {
@@ -60,6 +64,8 @@ export function Layout() {
       setRouteAnnouncement('Navigated to Privacy Policy page');
     } else if (location.pathname === '/terms') {
       setRouteAnnouncement('Navigated to Terms and Conditions page');
+    } else if (location.pathname === '/delete-account') {
+      setRouteAnnouncement('Navigated to Delete Account and Data page');
     } else if (location.pathname === '/') {
       setRouteAnnouncement('Navigated to Streako Home page');
     } else {
@@ -489,6 +495,15 @@ export function Layout() {
                   Terms of Service
                 </NavLink>
               </li>
+              <li>
+                <NavLink
+                  to="/delete-account"
+                  viewTransition
+                  className={({ isActive }) => `footer-legal-link ${isActive ? 'active-legal' : ''}`}
+                >
+                  Delete Account
+                </NavLink>
+              </li>
               <li><span className="badge-offline">Local-First Storage</span></li>
               <li><span className="badge-offline">Zero Tracking Ads</span></li>
             </ul>
@@ -503,6 +518,8 @@ export function Layout() {
             <Link to="/privacy" viewTransition>Privacy</Link>
             <span>•</span>
             <Link to="/terms" viewTransition>Terms</Link>
+            <span>•</span>
+            <Link to="/delete-account" viewTransition>Delete Account</Link>
             <span>•</span>
             <a href="mailto:streakocloud@gmail.com">Security Contact</a>
           </div>

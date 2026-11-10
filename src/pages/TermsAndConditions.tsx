@@ -26,10 +26,10 @@ const TERM_SECTIONS: TermSection[] = [
   },
   {
     id: 'accounts',
-    title: '3. User Accounts & Authentication',
-    summary: 'Guest local mode or optional Firebase Google Sign-In.',
+    title: '3. User Accounts & SSO Authentication',
+    summary: 'Google Single Sign-On (SSO) with local-first device storage.',
     content:
-      'You may utilize Streako anonymously in guest mode or authenticate via Google Sign-In powered by Firebase. You are solely responsible for maintaining the confidentiality of your device and login credentials, as well as all activities conducted under your profile.',
+      'Streako provides authentication solely through Google Single Sign-On (SSO) powered by Firebase Authentication. We do not create, request, or store passwords. All habit records and custom schedules reside locally in sandboxed storage on your device.',
   },
   {
     id: 'ownership',
@@ -54,10 +54,10 @@ const TERM_SECTIONS: TermSection[] = [
   },
   {
     id: 'termination',
-    title: '7. Termination & Account Erasure',
-    summary: 'Unrestricted right to delete app and wipe all stored data instantly.',
+    title: '7. Termination & Automated Account Erasure',
+    summary: 'Automated 1-tap delete in Settings wipes all local and SSO data instantly.',
     content:
-      'You may terminate your agreement with Streako at any moment by deleting the app. You can also execute a full data wipe using the "Delete Account & Data" action in Settings, which permanently removes all database records and authentication credentials.',
+      'You may terminate your agreement with Streako at any moment. Because Streako operates on a local-first storage model with Google SSO authentication, clicking "Delete Account" in Settings automatically deletes your account details, permanently erases your local Hive database, unregisters all scheduled alarms, and purges your SSO profile. See our dedicated Delete Account Guide for complete details.',
   },
   {
     id: 'changes',
@@ -136,6 +136,15 @@ export function TermsAndConditions() {
               aria-selected="true"
             >
               Terms of Service
+            </NavLink>
+            <NavLink
+              to="/delete-account"
+              viewTransition
+              className={({ isActive }) => `legal-tab-pill ${isActive ? 'active' : ''}`}
+              role="tab"
+              aria-selected="false"
+            >
+              Delete Account
             </NavLink>
           </div>
         </div>
@@ -289,8 +298,12 @@ export function TermsAndConditions() {
                 </>
               ) : sec.id === 'termination' ? (
                 <>
-                  You may terminate your agreement with Streako at any moment by deleting the app. You can also execute a full data wipe using the{' '}
-                  <strong>"Delete Account &amp; Data"</strong> action in Settings, which permanently removes all database records and authentication credentials.
+                  You may terminate your agreement with Streako at any moment. Because Streako operates on a local-first storage architecture with Google SSO login, clicking the{' '}
+                  <strong>"Delete Account"</strong> action inside mobile Settings automatically deletes your account details, permanently wipes your local Hive database, unregisters all scheduled alarms, and revokes your SSO profile immediately. For detailed steps, see our{' '}
+                  <Link to="/delete-account" viewTransition className="legal-link">
+                    Delete Account &amp; Data Guide
+                  </Link>
+                  .
                 </>
               ) : (
                 sec.content
@@ -310,6 +323,9 @@ export function TermsAndConditions() {
           <div className="legal-footer-actions">
             <Link to="/" viewTransition className="btn btn-secondary btn-sm">
               Return to Streako
+            </Link>
+            <Link to="/delete-account" viewTransition className="btn btn-secondary btn-sm">
+              Delete Account Guide
             </Link>
             <Link to="/privacy" viewTransition className="btn btn-primary btn-sm">
               View Privacy Policy →

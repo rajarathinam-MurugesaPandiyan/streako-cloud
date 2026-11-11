@@ -1,30 +1,108 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, type PointerEvent } from 'react';
 import { Outlet, Link, NavLink, useLocation, useNavigate, ScrollRestoration } from 'react-router-dom';
+
+type ThemeMode = 'system' | 'light' | 'dark';
+
+const getInitialTheme = (): ThemeMode => {
+  if (typeof window === 'undefined') return 'system';
+  try {
+    const savedTheme = localStorage.getItem('streako-theme');
+    if (savedTheme === 'light' || savedTheme === 'dark') {
+      return savedTheme;
+    }
+  } catch {
+    // Ignore storage access restrictions
+  }
+  return 'system';
+};
+
+const applyThemeToDocument = (nextTheme: ThemeMode) => {
+  try {
+    if (nextTheme === 'system') {
+      localStorage.removeItem('streako-theme');
+    } else {
+      localStorage.setItem('streako-theme', nextTheme);
+    }
+  } catch (e) {
+    console.warn('LocalStorage error:', e);
+  }
+
+  const meta = document.querySelector('meta[name="color-scheme"]');
+  if (meta) {
+    meta.setAttribute('content', nextTheme === 'system' ? 'light dark' : nextTheme);
+  }
+};
 
 export function Layout() {
   const location = useLocation();
   const navigate = useNavigate();
 
-  // Theme state: 'system' | 'light' | 'dark'
-  const [theme, setTheme] = useState<'system' | 'light' | 'dark'>('system');
+  // Theme state: 'system' | 'light' | 'dark', tracking rendered scheme
+  const [theme, setTheme] = useState<ThemeMode>(getInitialTheme);
+  const [systemIsDark, setSystemIsDark] = useState<boolean>(() =>
+    typeof window !== 'undefined' ? window.matchMedia('(prefers-color-scheme: dark)').matches : false,
+  );
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [routeAnnouncement, setRouteAnnouncement] = useState('');
+  const mobileDialogRef = useRef<HTMLDialogElement | null>(null);
+  const pointerDownOnBackdropRef = useRef(false);
 
-  // Initialize and synchronize Theme with localStorage and meta tag
+  const isDarkRendered = theme === 'dark' || (theme === 'system' && systemIsDark);
+
+  const routeAnnouncement = (() => {
+    if (location.pathname === '/privacy') return 'Navigated to Privacy Policy page';
+    if (location.pathname === '/terms') return 'Navigated to Terms and Conditions page';
+    if (location.pathname === '/delete-account') return 'Navigated to Delete Account and Data page';
+    if (location.pathname === '/') return 'Navigated to Streako Home page';
+    return 'Page loaded';
+  })();
+
+  // Synchronize Theme meta tag, OS preference changes, and cross-tab storage updates
   useEffect(() => {
-    try {
-      const savedTheme = localStorage.getItem('streako-theme');
-      if (savedTheme === 'light' || savedTheme === 'dark') {
-        setTheme(savedTheme);
-        const meta = document.querySelector('meta[name="color-scheme"]');
-        if (meta) meta.setAttribute('content', savedTheme);
-      }
-    } catch (e) {
-      console.warn('LocalStorage error:', e);
+    const meta = document.querySelector('meta[name="color-scheme"]');
+    if (meta) {
+      meta.setAttribute('content', theme === 'system' ? 'light dark' : theme);
     }
+  }, [theme]);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+
+    const handleMediaChange = (event: MediaQueryListEvent) => {
+      setSystemIsDark(event.matches);
+    };
+
+    const handleStorageChange = (event: StorageEvent) => {
+      if (event.key !== 'streako-theme') return;
+      const syncedTheme: ThemeMode =
+        event.newValue === 'light' || event.newValue === 'dark' ? event.newValue : 'system';
+      setTheme(syncedTheme);
+    };
+
+    mediaQuery.addEventListener('change', handleMediaChange);
+    window.addEventListener('storage', handleStorageChange);
+    return () => {
+      mediaQuery.removeEventListener('change', handleMediaChange);
+      window.removeEventListener('storage', handleStorageChange);
+    };
   }, []);
 
-  // Handle Legacy Hash URLs (#privacy, #terms) and smooth scrolling for #anchors
+  // Synchronize native top-layer mobile navigation dialog state
+  useEffect(() => {
+    const dialog = mobileDialogRef.current;
+    if (!dialog) return;
+
+    dialog.setAttribute('closedby', 'any');
+
+    if (mobileMenuOpen) {
+      if (!dialog.open) {
+        dialog.showModal();
+      }
+    } else if (dialog.open) {
+      dialog.close();
+    }
+  }, [mobileMenuOpen]);
+
+  // Handle Legacy Hash URLs (#privacy, #terms, #delete-account) and smooth scrolling for #anchors
   useEffect(() => {
     const hash = location.hash;
 
@@ -42,59 +120,34 @@ export function Layout() {
       return;
     }
 
+    const scrollBehavior: ScrollBehavior = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      ? 'auto'
+      : 'smooth';
+
     // Scroll to section when hash is present
     if (hash && hash !== '#top') {
       const targetId = hash.replace('#', '');
       const timer = setTimeout(() => {
         const targetElement = document.getElementById(targetId);
         if (targetElement) {
-          targetElement.scrollIntoView({ behavior: 'smooth' });
+          targetElement.scrollIntoView({ behavior: scrollBehavior });
         }
       }, 80);
       return () => clearTimeout(timer);
     } else if (!hash) {
       // Scroll to top on page navigation without hash
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      window.scrollTo({ top: 0, behavior: scrollBehavior });
     }
   }, [location.pathname, location.hash, navigate]);
 
-  // Screen reader accessible route announcer
-  useEffect(() => {
-    if (location.pathname === '/privacy') {
-      setRouteAnnouncement('Navigated to Privacy Policy page');
-    } else if (location.pathname === '/terms') {
-      setRouteAnnouncement('Navigated to Terms and Conditions page');
-    } else if (location.pathname === '/delete-account') {
-      setRouteAnnouncement('Navigated to Delete Account and Data page');
-    } else if (location.pathname === '/') {
-      setRouteAnnouncement('Navigated to Streako Home page');
-    } else {
-      setRouteAnnouncement('Page loaded');
-    }
-  }, [location.pathname]);
-
-  // Theme toggle handler
+  // 2-state opposite-of-rendered theme toggle; returns cleanly to 'system' when matching OS
   const toggleTheme = () => {
-    let nextTheme: 'system' | 'light' | 'dark';
-    if (theme === 'system') {
-      const systemIsDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      nextTheme = systemIsDark ? 'light' : 'dark';
-    } else if (theme === 'light') {
-      nextTheme = 'dark';
-    } else {
-      nextTheme = 'system';
-    }
+    const nextRenderedDark = !isDarkRendered;
+    const nextTheme: ThemeMode =
+      nextRenderedDark === systemIsDark ? 'system' : nextRenderedDark ? 'dark' : 'light';
 
     setTheme(nextTheme);
-    const meta = document.querySelector('meta[name="color-scheme"]');
-
-    if (nextTheme === 'system') {
-      localStorage.removeItem('streako-theme');
-      if (meta) meta.setAttribute('content', 'light dark');
-    } else {
-      localStorage.setItem('streako-theme', nextTheme);
-      if (meta) meta.setAttribute('content', nextTheme);
-    }
+    applyThemeToDocument(nextTheme);
   };
 
   const isHome = location.pathname === '/';
@@ -102,21 +155,58 @@ export function Layout() {
   // Smooth scroll handler for anchor links
   const handleNavClick = (anchor: string) => {
     setMobileMenuOpen(false);
+    const scrollBehavior: ScrollBehavior = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      ? 'auto'
+      : 'smooth';
+
     if (isHome) {
       if (anchor === '#top') {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        window.scrollTo({ top: 0, behavior: scrollBehavior });
       } else {
         const id = anchor.replace('#', '');
         const elem = document.getElementById(id);
         if (elem) {
-          elem.scrollIntoView({ behavior: 'smooth' });
+          elem.scrollIntoView({ behavior: scrollBehavior });
         }
       }
     }
   };
 
+  const handleMobileDialogPointerDown = (e: PointerEvent<HTMLDialogElement>) => {
+    if ('closedBy' in HTMLDialogElement.prototype) return;
+    const dialog = mobileDialogRef.current;
+    if (!dialog) return;
+    const rect = dialog.getBoundingClientRect();
+    const inside =
+      e.clientX >= rect.left &&
+      e.clientX <= rect.right &&
+      e.clientY >= rect.top &&
+      e.clientY <= rect.bottom;
+    pointerDownOnBackdropRef.current = !inside;
+  };
+
+  const handleMobileDialogPointerUp = (e: PointerEvent<HTMLDialogElement>) => {
+    if ('closedBy' in HTMLDialogElement.prototype || !pointerDownOnBackdropRef.current) return;
+    pointerDownOnBackdropRef.current = false;
+    const dialog = mobileDialogRef.current;
+    if (!dialog) return;
+    const rect = dialog.getBoundingClientRect();
+    const inside =
+      e.clientX >= rect.left &&
+      e.clientX <= rect.right &&
+      e.clientY >= rect.top &&
+      e.clientY <= rect.bottom;
+    if (!inside) {
+      setMobileMenuOpen(false);
+    }
+  };
+
   return (
     <div className="streako-app-root">
+      <a href="#main-content" className="skip-link">
+        Skip to main content
+      </a>
+
       {/* Native React Router 7 Scroll Restoration */}
       <ScrollRestoration />
 
@@ -217,17 +307,13 @@ export function Layout() {
               onClick={toggleTheme}
               className="theme-toggle-btn"
               type="button"
-              aria-label={`Toggle theme (Current: ${theme})`}
-              title={`Switch color theme (Current: ${theme})`}
+              aria-label={isDarkRendered ? 'Switch to light theme' : 'Switch to dark theme'}
+              title={isDarkRendered ? 'Switch to light theme' : 'Switch to dark theme'}
             >
-              {theme === 'dark' ? (
-                <svg className="theme-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
-                </svg>
-              ) : (
-                <svg className="theme-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              {isDarkRendered ? (
+                <svg className="theme-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
                   <circle cx="12" cy="12" r="5" />
-                  <line x1="12" y1="12" x2="12" y2="3" />
+                  <line x1="12" y1="1" x2="12" y2="3" />
                   <line x1="12" y1="21" x2="12" y2="23" />
                   <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
                   <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
@@ -235,6 +321,10 @@ export function Layout() {
                   <line x1="21" y1="12" x2="23" y2="12" />
                   <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
                   <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+                </svg>
+              ) : (
+                <svg className="theme-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+                  <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
                 </svg>
               )}
             </button>
@@ -257,11 +347,12 @@ export function Layout() {
 
             {/* Mobile Hamburger Button */}
             <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              onClick={() => setMobileMenuOpen((prev) => !prev)}
               className="mobile-menu-btn"
               type="button"
               aria-expanded={mobileMenuOpen}
-              aria-label="Toggle navigation menu"
+              aria-controls="mobile-nav-dialog"
+              aria-label="Open navigation menu"
             >
               <span className="hamburger-bar"></span>
               <span className="hamburger-bar"></span>
@@ -270,9 +361,30 @@ export function Layout() {
           </div>
         </div>
 
-        {/* Mobile Navigation Drawer */}
-        {mobileMenuOpen && (
-          <div className="mobile-nav-drawer">
+        {/* Native Top-Layer Mobile Navigation Drawer */}
+        <dialog
+          id="mobile-nav-dialog"
+          ref={mobileDialogRef}
+          className="mobile-nav-dialog"
+          aria-labelledby="mobile-nav-title"
+          onClose={() => setMobileMenuOpen(false)}
+          onPointerDown={handleMobileDialogPointerDown}
+          onPointerUp={handleMobileDialogPointerUp}
+        >
+          <div className="mobile-nav-header">
+            <span id="mobile-nav-title" className="logo-text">
+              Streako Menu
+            </span>
+            <button
+              type="button"
+              className="mobile-nav-close-btn"
+              onClick={() => setMobileMenuOpen(false)}
+              aria-label="Close navigation menu"
+            >
+              &times;
+            </button>
+          </div>
+          <nav aria-label="Mobile Navigation">
             <ul className="mobile-nav-links">
               <li>
                 {isHome ? (
@@ -360,22 +472,34 @@ export function Layout() {
                   Terms of Service
                 </NavLink>
               </li>
+              <li>
+                <NavLink
+                  to="/delete-account"
+                  viewTransition
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={({ isActive }) => `mobile-nav-link ${isActive ? 'active' : ''}`}
+                >
+                  Delete Account
+                </NavLink>
+              </li>
             </ul>
-            {isHome ? (
-              <a href="#download" onClick={() => handleNavClick('#download')} className="btn btn-primary btn-block">
-                Download Streako
-              </a>
-            ) : (
-              <Link to="/#download" viewTransition onClick={() => setMobileMenuOpen(false)} className="btn btn-primary btn-block">
-                Download Streako
-              </Link>
-            )}
-          </div>
-        )}
+          </nav>
+          {isHome ? (
+            <a href="#download" onClick={() => handleNavClick('#download')} className="btn btn-primary btn-block">
+              Get Streako
+            </a>
+          ) : (
+            <Link to="/#download" viewTransition onClick={() => setMobileMenuOpen(false)} className="btn btn-primary btn-block">
+              Get Streako
+            </Link>
+          )}
+        </dialog>
       </header>
 
       {/* PAGE VIEW OUTLET */}
-      <Outlet />
+      <div id="main-content" tabIndex={-1}>
+        <Outlet />
+      </div>
 
       {/* FOOTER */}
       <footer className="site-footer">
@@ -391,16 +515,19 @@ export function Layout() {
               <span className="logo-text">Streako</span>
             </Link>
             <p className="footer-tagline">
+              Tap &bull; Track &bull; Triumph.
+            </p>
+            <p className="footer-desc">
               The minimalist audio-first habit tracker engineered around loss aversion and circadian daytime rhythms.
             </p>
             <div className="footer-badges">
               <span className="footer-chip">v1.0.0</span>
-              <span className="footer-chip">iOS & Android</span>
+              <span className="footer-chip">Android &bull; iOS Soon</span>
             </div>
           </div>
 
           <div className="footer-nav-col">
-            <h4 className="footer-col-title">Product</h4>
+            <h2 className="footer-col-title">Product</h2>
             <ul className="footer-links">
               <li>
                 {isHome ? (
@@ -441,7 +568,7 @@ export function Layout() {
           </div>
 
           <div className="footer-nav-col">
-            <h4 className="footer-col-title">Resources</h4>
+            <h2 className="footer-col-title">Resources</h2>
             <ul className="footer-links">
               <li>
                 {isHome ? (
@@ -452,9 +579,9 @@ export function Layout() {
               </li>
               <li>
                 {isHome ? (
-                  <a href="#download" onClick={() => handleNavClick('#download')}>iOS Download</a>
+                  <a href="#download" onClick={() => handleNavClick('#download')}>App Downloads</a>
                 ) : (
-                  <Link to="/#download" viewTransition>iOS Download</Link>
+                  <Link to="/#download" viewTransition>App Downloads</Link>
                 )}
               </li>
               <li>
@@ -475,7 +602,7 @@ export function Layout() {
           </div>
 
           <div className="footer-nav-col">
-            <h4 className="footer-col-title">Legal & Trust</h4>
+            <h2 className="footer-col-title">Legal & Trust</h2>
             <ul className="footer-links">
               <li>
                 <NavLink

@@ -28,26 +28,28 @@
         --bg-page: #f8faf9;
         --bg-surface: #ffffff;
         --bg-card: #ffffff;
-        --border-color: #e5e7eb;
-        --text-primary: #111827;
-        --text-secondary: #4b5563;
-        --text-muted: #6b7280;
-        --brand-primary: #059669;
-        --brand-accent: #10b981;
-        --blue-accent: #339af0;
+        --border-color: #d5ddd8;
+        --text-primary: #18211d;
+        --text-secondary: #4a5550;
+        --text-muted: #57605b;
+        --brand-primary: #076e4e;
+        --brand-accent: #076e4e;
+        --on-accent: #ffffff;
+        --blue-accent: #1971c2;
       }
 
       @media (prefers-color-scheme: dark) {
         :root {
-          --bg-page: #0b1411;
-          --bg-surface: #13221d;
-          --bg-card: #182a24;
-          --border-color: #243d34;
-          --text-primary: #f3f4f6;
-          --text-secondary: #9ca3af;
-          --text-muted: #9ca3af;
-          --brand-primary: #10b981;
-          --brand-accent: #34d399;
+          --bg-page: #121614;
+          --bg-surface: #1c2420;
+          --bg-card: #1c2420;
+          --border-color: #2c3d35;
+          --text-primary: #ffffff;
+          --text-secondary: #c1ccc6;
+          --text-muted: #9ba8a2;
+          --brand-primary: #0cbc8b;
+          --brand-accent: #0cbc8b;
+          --on-accent: #0d221b;
           --blue-accent: #339af0;
         }
       }
@@ -56,6 +58,11 @@
         box-sizing: border-box;
         margin: 0;
         padding: 0;
+      }
+
+      :focus-visible {
+        outline: 2px solid var(--brand-primary);
+        outline-offset: 2px;
       }
 
       body {
@@ -74,8 +81,10 @@
       /* Navigation header */
       .nav-bar {
         display: flex;
+        flex-wrap: wrap;
         align-items: center;
         justify-content: space-between;
+        gap: 0.75rem 1rem;
         margin-bottom: 2rem;
         padding-bottom: 1rem;
         border-bottom: 1px solid var(--border-color);
@@ -93,12 +102,16 @@
 
       .nav-links {
         display: flex;
-        gap: 0.75rem;
+        flex-wrap: wrap;
+        flex-wrap: balance;
+        gap: 0.5rem;
         align-items: center;
       }
 
       .nav-pill {
-        display: inline-block;
+        display: inline-flex;
+        align-items: center;
+        min-height: 36px;
         padding: 0.4rem 0.85rem;
         border-radius: 9999px;
         font-size: 0.85rem;
@@ -109,9 +122,15 @@
         transition: all 0.2s ease;
       }
 
-      .nav-pill:hover,
-      .nav-pill.active {
+      .nav-pill:hover {
         color: var(--brand-primary);
+        border-color: var(--brand-primary);
+        font-weight: 600;
+      }
+
+      .nav-pill.active {
+        background: var(--brand-primary);
+        color: var(--on-accent);
         border-color: var(--brand-primary);
         font-weight: 600;
       }
@@ -149,7 +168,7 @@
       }
 
       .hero-title {
-        font-size: clamp(1.6rem, 3.5vw, 2.25rem);
+        font-size: clamp(1.6rem, 1rem + 2vw, 2.25rem);
         font-weight: 800;
         line-height: 1.25;
         margin-bottom: 0.75rem;
@@ -264,6 +283,43 @@
 
       .footer a:hover {
         text-decoration: underline;
+      }
+
+      @media (max-width: 640px) {
+        body {
+          padding: 1rem 0.75rem 2.5rem;
+        }
+        .nav-bar {
+          flex-direction: column;
+          align-items: stretch;
+        }
+        .nav-links {
+          justify-content: flex-start;
+        }
+        .hero-card,
+        .section-card {
+          padding: 1.35rem;
+          border-radius: 14px;
+        }
+        .meta-box {
+          padding: 1rem;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after {
+          transition: none !important;
+          scroll-behavior: auto !important;
+        }
+      }
+
+      @media (forced-colors: active) {
+        .nav-pill,
+        .hero-card,
+        .section-card,
+        .guarantee-card {
+          border: 1px solid CanvasText;
+        }
       }
     </style>
   </head>
@@ -427,3 +483,4 @@
     </div>
   </body>
 </html>
+

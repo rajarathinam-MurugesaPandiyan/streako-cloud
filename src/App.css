@@ -249,8 +249,9 @@
 
 .hero-trust-bar {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 1.5rem;
+  gap: 1.25rem 1.5rem;
   padding-top: 1.5rem;
   border-top: 1px solid var(--border-subtle);
   width: 100%;
@@ -279,6 +280,41 @@
   background-color: var(--border-subtle);
 }
 
+.hero-metrics {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border-subtle);
+  width: 100%;
+}
+
+.metric-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.metric-number {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.metric-label {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.metric-divider {
+  width: 1px;
+  height: 28px;
+  background-color: var(--border-subtle);
+}
+
 /* =========================================
    PHONE DEVICE MOCKUP
    ========================================= */
@@ -289,8 +325,9 @@
 }
 
 .phone-device-frame {
-  width: 320px;
-  height: 640px;
+  width: min(100%, 320px);
+  min-height: 640px;
+  height: auto;
   background-color: #000000;
   border-radius: 46px;
   padding: 12px;
@@ -298,6 +335,7 @@
   border: 4px solid #2B332F;
   position: relative;
   user-select: none;
+  margin-inline: auto;
 }
 
 .phone-notch {
@@ -482,7 +520,7 @@
   margin-bottom: 0.75rem;
 }
 
-.section-title {
+.phone-section-header .section-title {
   font-size: 0.85rem;
   font-weight: 700;
 }
@@ -985,13 +1023,13 @@
 
 .tone-play-btn:hover {
   background-color: var(--color-brand-accent);
-  color: #FFFFFF;
+  color: var(--color-on-accent);
   border-color: var(--color-brand-accent);
 }
 
 .tone-card.playing .tone-play-btn {
   background-color: var(--color-brand-accent);
-  color: #FFFFFF;
+  color: var(--color-on-accent);
 }
 
 .tone-waveform {
@@ -1011,7 +1049,12 @@
 
 .tone-card.playing .wave-bar {
   background-color: var(--color-brand-accent);
-  animation: wavePulse 0.8s ease-in-out infinite alternate;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .tone-card.playing .wave-bar {
+    animation: wavePulse 0.8s ease-in-out infinite alternate;
+  }
 }
 
 .tone-card.playing .wave-bar:nth-child(1) { animation-delay: 0.1s; }
@@ -1028,6 +1071,44 @@
 /* =========================================
    AWARDS SECTION
    ========================================= */
+.awards-controls {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+.awards-motion-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 1.15rem;
+  border-radius: 9999px;
+  background-color: var(--bg-surface-elevated);
+  color: var(--text-primary);
+  border: 1px solid var(--border-subtle);
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.awards-motion-btn:hover {
+  background-color: var(--color-brand-accent);
+  color: var(--color-on-accent);
+  border-color: var(--color-brand-accent);
+}
+
+.awards-motion-btn:focus-visible {
+  outline: 2px solid var(--color-brand-accent);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .awards-motion-btn {
+    transition: none;
+  }
+}
+
 .awards-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -1095,12 +1176,46 @@
 }
 
 .award-animation-box {
+  position: relative;
   width: 90px;
   height: 90px;
   margin-bottom: 1rem;
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.award-lottie-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.award-lottie-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.award-lottie-canvas.is-ready {
+  opacity: 1;
+}
+
+.award-lottie-canvas svg {
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  display: block;
 }
 
 .fallback-award-icon {
@@ -1615,33 +1730,83 @@
 /* =========================================
    CELEBRATION MODAL
    ========================================= */
-.modal-backdrop {
-  position: fixed;
-  inset: 0;
+dialog.celebration-dialog {
+  background-color: var(--bg-surface);
+  color: var(--text-primary);
+  border: 1px solid var(--border-strong);
+  border-radius: 28px;
+  padding: 2.25rem;
+  width: min(calc(100% - 2rem), 440px);
+  max-width: 440px;
+  margin: auto;
+  text-align: center;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.4);
+  overscroll-behavior: contain;
+  opacity: 0;
+  transform: scale(0.95);
+}
+
+dialog.celebration-dialog[open] {
+  opacity: 1;
+  transform: scale(1);
+}
+
+dialog.celebration-dialog:modal {
+  overscroll-behavior: contain;
+}
+
+dialog.celebration-dialog::backdrop {
   background-color: rgba(0, 0, 0, 0.65);
   backdrop-filter: blur(8px);
-  z-index: 1000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 1.5rem;
+  overflow: hidden;
+  overscroll-behavior: contain;
+  opacity: 0;
+}
+
+dialog.celebration-dialog[open]::backdrop {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  dialog.celebration-dialog {
+    transition:
+      opacity 0.25s ease,
+      transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+      overlay 0.25s allow-discrete,
+      display 0.25s allow-discrete;
+  }
+
+  dialog.celebration-dialog::backdrop {
+    transition:
+      opacity 0.25s ease,
+      overlay 0.25s allow-discrete,
+      display 0.25s allow-discrete;
+  }
+
+  @starting-style {
+    dialog.celebration-dialog[open] {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+
+    dialog.celebration-dialog[open]::backdrop {
+      opacity: 0;
+    }
+  }
 }
 
 .modal-backdrop[hidden] {
   display: none;
 }
 
-.modal-card {
-  background-color: var(--bg-surface);
-  border: 1px solid var(--border-strong);
-  border-radius: 28px;
-  padding: 2.5rem;
-  max-width: 440px;
-  width: 100%;
-  text-align: center;
-  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.4);
+.modal-card-content {
   position: relative;
-  animation: modalScale 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.modal-actions {
+  margin-top: 1.5rem;
+  display: flex;
+  justify-content: center;
 }
 
 @keyframes modalScale {
@@ -1725,10 +1890,41 @@
   .mobile-menu-btn {
     display: flex;
   }
+  .hero-section {
+    padding: 3rem 0 3.5rem;
+  }
+  .hero-cta-group {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .hero-metrics {
+    gap: 0.85rem 1.25rem;
+  }
+  .metric-divider {
+    display: none;
+  }
+  .simulator-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  .science-card,
+  .simulator-card,
+  .download-banner {
+    padding: 1.5rem;
+  }
+  .feature-card,
+  .tone-card,
+  .award-card {
+    padding: 1.35rem;
+  }
   .features-grid {
     grid-template-columns: 1fr;
   }
   .tones-grid {
+    grid-template-columns: 1fr;
+  }
+  .awards-grid {
     grid-template-columns: 1fr;
   }
   .testimonials-grid {
@@ -1737,11 +1933,36 @@
   .sim-habit-grid {
     grid-template-columns: 1fr;
   }
+  .download-buttons {
+    flex-direction: column;
+    align-items: stretch;
+  }
   .phone-floating-badge {
     display: none;
   }
   .footer-grid {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .phone-device-frame {
+    border-radius: 36px;
+    padding: 10px;
+    min-height: 580px;
+  }
+  .phone-screen {
+    padding: 2.5rem 0.9rem 1rem;
+  }
+  .science-card,
+  .simulator-card,
+  .download-banner {
+    padding: 1.25rem;
+    border-radius: 22px;
+  }
+  dialog.celebration-dialog {
+    padding: 1.5rem;
+    border-radius: 22px;
   }
 }
 
@@ -2086,7 +2307,7 @@
   border-radius: 6px;
   font-size: 0.82rem;
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  color: var(--brand-primary);
+  color: var(--color-brand-accent);
   border: 1px solid var(--border-subtle);
 }
 
@@ -2097,7 +2318,7 @@
 }
 
 .legal-meta-link:hover {
-  color: var(--brand-primary);
+  color: var(--color-brand-accent);
 }
 
 /* Key Guarantees Grid */
@@ -2686,8 +2907,20 @@
   .legal-page-container {
     padding: 1.5rem 1rem 4rem;
   }
+  .legal-doc-switcher {
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+  .legal-tab-pill {
+    padding: 0.45rem 0.8rem;
+    font-size: 0.85rem;
+  }
+  .legal-hero-card,
+  .legal-section-card {
+    padding: 1.35rem;
+  }
   .legal-nav-bar {
-    top: 4.25rem;
+    top: 4.85rem;
     padding: 0.4rem 0.85rem;
     flex-direction: column;
     align-items: stretch;
@@ -2851,4 +3084,236 @@
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
+}
+
+
+/* ==========================================================================
+   Modern Accessibility, Contrast, Layout & Top-Layer Dialog Enhancements
+   ========================================================================== */
+
+.hero-section {
+  overflow: clip;
+}
+
+.hero-title {
+  font-size: clamp(2.1rem, 1rem + 3.2vw, 3.75rem);
+}
+
+.science-title {
+  font-size: clamp(1.65rem, 1rem + 2.1vw, 2.25rem);
+}
+
+.legal-title {
+  font-size: clamp(1.75rem, 1rem + 2.1vw, 2.5rem);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .phone-floating-badge {
+    animation: none;
+  }
+}
+
+.habit-orange {
+  color: var(--color-brand-orange);
+}
+
+.habit-blue {
+  color: var(--color-brand-blue);
+}
+
+.habit-teal {
+  color: var(--color-brand-teal);
+}
+
+.habit-purple {
+  color: var(--color-brand-purple);
+}
+
+/* Single semantic interactive controls for habit rows (no nested button-in-div) */
+button.mock-habit-item,
+button.sim-habit-item {
+  width: 100%;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  appearance: none;
+  background-color: var(--bg-surface);
+}
+
+button.mock-habit-item:focus-visible,
+button.sim-habit-item:focus-visible {
+  outline: 2px solid var(--color-brand-accent);
+  outline-offset: 2px;
+}
+
+.habit-check-btn.checked,
+.sim-habit-item.checked .sim-check-btn,
+.legal-tab-pill.active,
+.legal-toc-pill:hover {
+  color: var(--color-on-accent);
+}
+
+.legal-tab-pill.active,
+.legal-toc-pill:hover {
+  background-color: var(--color-brand-accent);
+  border-color: var(--color-brand-accent);
+}
+
+.legal-nav-bar {
+  top: 4.85rem;
+}
+
+.legal-doc-switcher {
+  flex-wrap: wrap;
+  flex-wrap: balance;
+}
+
+.legal-tab-pill,
+.legal-toc-pill,
+.legal-back-btn,
+.legal-copy-btn {
+  min-block-size: 36px;
+}
+
+.theme-toggle-btn,
+.mobile-menu-btn,
+.tone-play-btn,
+.modal-close-btn {
+  min-block-size: 40px;
+  min-inline-size: 40px;
+}
+
+/* Scannable Play Store QR & Coming Soon iOS badge state */
+.qr-code-svg {
+  width: 84px;
+  height: 84px;
+  border-radius: 10px;
+  display: block;
+  flex-shrink: 0;
+  border: 1px solid var(--border-subtle);
+  background-color: #FFFFFF;
+}
+
+.store-badge-btn.is-coming-soon {
+  opacity: 0.78;
+  cursor: default;
+  border-style: dashed;
+}
+
+.store-badge-btn.is-coming-soon:hover {
+  transform: none;
+  border-color: var(--border-subtle);
+}
+
+/* Soundscape audio loading & error feedback */
+.tone-play-btn[aria-busy="true"] {
+  opacity: 0.72;
+  cursor: wait;
+}
+
+.tone-error-note {
+  margin-top: 0.65rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--color-brand-red);
+}
+
+/* Accessible table and status badges in legal & account deletion views */
+.s-point h3 {
+  margin-bottom: 0.25rem;
+  font-size: 1.05rem;
+}
+
+.badge-deleted {
+  color: var(--color-brand-red);
+}
+
+.badge-retained {
+  color: var(--color-brand-orange);
+}
+
+/* Native top-layer mobile navigation drawer */
+dialog.mobile-nav-dialog {
+  inset: 0 0 auto 0;
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  border: none;
+  border-bottom: 1px solid var(--border-strong);
+  border-radius: 0 0 24px 24px;
+  background-color: var(--bg-surface);
+  color: var(--text-primary);
+  padding: 1rem 1.5rem 2rem;
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.25);
+  overscroll-behavior: contain;
+}
+
+dialog.mobile-nav-dialog[open] {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+dialog.mobile-nav-dialog:modal {
+  overscroll-behavior: contain;
+}
+
+dialog.mobile-nav-dialog::backdrop {
+  background-color: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(4px);
+  overflow: hidden;
+  overscroll-behavior: contain;
+}
+
+.mobile-nav-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.mobile-nav-close-btn {
+  min-width: 44px;
+  min-height: 44px;
+  border-radius: 9999px;
+  border: 1px solid var(--border-subtle);
+  background-color: var(--bg-surface-elevated);
+  color: var(--text-primary);
+  font-size: 1.4rem;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.mobile-nav-close-btn:hover {
+  border-color: var(--color-brand-accent);
+  color: var(--color-brand-accent);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  dialog.mobile-nav-dialog {
+    opacity: 0;
+    transform: translateY(-12px);
+    transition:
+      opacity 0.2s ease,
+      transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+      overlay 0.2s allow-discrete,
+      display 0.2s allow-discrete;
+  }
+
+  dialog.mobile-nav-dialog[open] {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  @starting-style {
+    dialog.mobile-nav-dialog[open] {
+      opacity: 0;
+      transform: translateY(-12px);
+    }
+  }
 }
